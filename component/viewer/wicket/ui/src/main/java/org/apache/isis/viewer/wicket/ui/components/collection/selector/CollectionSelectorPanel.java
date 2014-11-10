@@ -42,7 +42,6 @@ import org.apache.isis.viewer.wicket.model.hints.UiHintPathSignificant;
 import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
 import org.apache.isis.viewer.wicket.ui.CollectionContentsAsFactory;
 import org.apache.isis.viewer.wicket.ui.ComponentFactory;
-import org.apache.isis.viewer.wicket.ui.ComponentType;
 import org.apache.isis.viewer.wicket.ui.panels.PanelAbstract;
 import org.apache.isis.viewer.wicket.ui.util.CssClassAppender;
 
@@ -66,15 +65,13 @@ public class CollectionSelectorPanel
     private static final String ID_VIEW_BUTTON_TITLE = "viewButtonTitle";
     private static final String ID_VIEW_BUTTON_ICON = "viewButtonIcon";
 
-    private final ComponentType componentType;
-    private final CollectionSelectorHelper selectorHelper;
+    private final ComponentFactory ignoreFactory;
 
     private ComponentFactory selectedComponentFactory;
 
     public CollectionSelectorPanel(final String id, final EntityCollectionModel model, final ComponentFactory ignoreFactory) {
         super(id, model);
-        this.componentType = ignoreFactory.getComponentType();
-        selectorHelper = new CollectionSelectorHelper(model, getComponentFactoryRegistry(), ignoreFactory);
+        this.ignoreFactory = ignoreFactory;
     }
 
     /**
@@ -85,9 +82,9 @@ public class CollectionSelectorPanel
         addDropdown();
     }
 
-
-
     private void addDropdown() {
+        CollectionSelectorHelper selectorHelper = new CollectionSelectorHelper(getModel(), getComponentFactoryRegistry(), ignoreFactory);
+        ;
         final List<ComponentFactory> componentFactories = selectorHelper.findOtherComponentFactories();
         final int selected = selectorHelper.honourViewHintElseDefault(this);
 

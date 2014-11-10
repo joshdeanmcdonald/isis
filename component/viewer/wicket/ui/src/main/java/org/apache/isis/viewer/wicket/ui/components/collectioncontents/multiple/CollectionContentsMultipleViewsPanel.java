@@ -59,7 +59,6 @@ public class CollectionContentsMultipleViewsPanel
 
     private final ComponentType componentType;
     private final String underlyingIdPrefix;
-    private final CollectionSelectorHelper selectorHelper;
 
     private ComponentFactory selectedComponentFactory;
     private Component selectedComponent;
@@ -75,7 +74,6 @@ public class CollectionContentsMultipleViewsPanel
         this.ignoreFactory = ignoreFactory;
         this.underlyingIdPrefix = ComponentType.COLLECTION_CONTENTS.toString();
         this.componentType = ignoreFactory.getComponentType();
-        selectorHelper = new CollectionSelectorHelper(model, getComponentFactoryRegistry(), ignoreFactory);
 
     }
 
@@ -90,6 +88,8 @@ public class CollectionContentsMultipleViewsPanel
 
     private void addUnderlyingViews() {
         final EntityCollectionModel model = getModel();
+
+        CollectionSelectorHelper selectorHelper = getSelectorHelper();
 
         final int selected = selectorHelper.honourViewHintElseDefault(getSelectorDropdownPanel());
         final List<ComponentFactory> componentFactories = selectorHelper.findOtherComponentFactories();
@@ -140,7 +140,7 @@ public class CollectionContentsMultipleViewsPanel
         int underlyingViewNum = 0;
         String viewStr = uiHintContainer.getHint(this.getSelectorDropdownPanel(), UIHINT_VIEW);
 
-        List<ComponentFactory> componentFactories = selectorHelper.findOtherComponentFactories();
+        List<ComponentFactory> componentFactories = getSelectorHelper().findOtherComponentFactories();
 
         if(viewStr != null) {
             try {
@@ -223,4 +223,7 @@ public class CollectionContentsMultipleViewsPanel
         throw new IllegalStateException("Could not locate parent that implements HasSelectorDropdownPanel");
     }
 
+    private CollectionSelectorHelper getSelectorHelper() {
+        return new CollectionSelectorHelper(getModel(), getComponentFactoryRegistry(), ignoreFactory);
+    }
 }
